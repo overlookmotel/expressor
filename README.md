@@ -4,8 +4,10 @@
 
 ## Current status
 
-[![Build Status](https://secure.travis-ci.org/overlookmotel/expressor.png?branch=master)](http://travis-ci.org/overlookmotel/expressor)
-[![Dependency Status](https://david-dm.org/overlookmotel/expressor.png)](https://david-dm.org/overlookmotel/expressor)
+[![NPM version](https://img.shields.io/npm/v/expressor.svg)](https://www.npmjs.com/package/expressor)
+[![Build Status](https://img.shields.io/travis/overlookmotel/expressor/master.svg)](http://travis-ci.org/overlookmotel/expressor)
+[![Dependency Status](https://img.shields.io/david/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
+[![Dev dependency Status](https://img.shields.io/david/dev/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
 
 ## Usage
 
