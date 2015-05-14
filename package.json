@@ -1,0 +1,46 @@
+{
+  "name": "expressor",
+  "version": "0.0.0",
+  "description": "Easy definition of express routes from a folder structure",
+  "main": "./lib/",
+  "author": {
+    "name": "Overlook Motel"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/overlookmotel/expressor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/overlookmotel/expressor/issues"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "mocha": "^2.2.4",
+    "chai": "^2.3.0",
+	"jshint": "^2.7.0"
+  },
+  "keywords": [
+    "express",
+    "route",
+    "routes",
+    "define",
+    "folder",
+    "file",
+    "structure",
+    "tree"
+  ],
+  "scripts": {
+    "test": "make test"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "readmeFilename": "README.md",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/overlookmotel/expressor/raw/master/License"
+    }
+  ]
+}
