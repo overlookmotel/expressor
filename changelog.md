@@ -7,3 +7,7 @@
 ## 0.0.2
 
 * Update express dev dependency
+
+## Next
+
+* README for `parentAction`

@@ -262,6 +262,24 @@ module.exports = {
 };
 ```
 
+##### parentAction
+
+Sit this action on top of another action in the parent route.
+
+e.g. for /users/:userId/permissions/:permissionId
+
+```js
+// controllers/users/permissions/view.js
+module.exports = {
+    parentAction: 'view',
+    pathPart: null,
+    params: 'permissionId',
+    get: function(req, res) { /* etc etc */ }
+};
+```
+
+Setting parentAction in the above example sits the route on top of the `users/view` action rather than the default `users/index`. i.e. makes the route path start `/users/:userId/` rather than `/users/`.
+
 #### Path tricks
 
 To make github-style routes `/:organisation/:repo`:
