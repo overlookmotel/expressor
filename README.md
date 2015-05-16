@@ -9,9 +9,328 @@
 [![Dependency Status](https://img.shields.io/david/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
 [![Dev dependency Status](https://img.shields.io/david/dev/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
 
-## Usage
+API is not yet stable and breaking changes are possible in v0.1.0. There are tests covering all options.
 
-NOT READY FOR USE YET
+## What is it for?
+
+[Express](https://www.npmjs.com/package/express) is a brilliant and simple web framework for node. But most of the time having to define controllers and then manually link them to routes is unnecessary work.
+
+This module allows routes to be defined by placing controllers in files in a folder structure, and then creates express routes for them automatically, based on the folder structure.
+
+## Installation
+
+    npm install expressor
+
+## Basic usage
+
+### `expressor( app, [path], [options] )`
+
+```js
+var express = require('express');
+var expressor = require('expressor');
+var path = require('path');
+
+var app = express();
+expressor(app, path.join(__dirname, 'controllers'));
+
+var server = app.listen(3000, function () {
+    console.log('Server started');
+};
+
+```
+
+If path is omitted, `process.cwd() + 'controllers'` will be used. This isn't foolproof, so best to specify the path manually.
+
+#### With options
+
+```js
+expressor(app, '/path/to/controllers', { /* options */ });
+```
+
+or:
+
+```js
+expressor(app, {
+    path: '/path/to/controllers',
+    /* options */
+});
+```
+
+### Controller definitions
+
+If you want to define the following routes:
+
+```
+/
+/help
+/users
+/users/new
+/users/:id
+/users/:id/edit
+/users/:id/delete
+```
+
+create the following file structure:
+
+```
+controllers/index.js
+controllers/help/index.js
+controllers/users/index.js
+controllers/users/new.js
+controllers/users/view.js
+controllers/users/edit.js
+controllers/users/delete.js
+```
+
+Controller definitions would be as follows:
+
+#### controllers/index.js
+
+```js
+// creates routing '/'
+module.exports = {
+    get: function (req, res, next) {
+        res.send('Welcome to my website');
+    }
+};
+```
+
+#### controllers/help/index.js
+
+```js
+// creates routing '/help'
+module.exports = {
+    get: function (req, res, next) {
+        res.send('Help page');
+    }
+};
+```
+
+#### controllers/users/index.js
+
+```js
+// creates routing '/users'
+module.exports = {
+    get: function (req, res, next) {
+        // code to print list of users
+    }
+};
+```
+
+#### controllers/users/new.js
+
+```js
+// creates routing '/users/new'
+module.exports = {
+    get: function (req, res, next) {
+        // code to print form for new user
+    },
+    post: function (req, res, next) {
+        // code to process form submission
+    }
+};
+```
+
+#### controllers/users/view.js
+
+```js
+// creates routing '/users/:id'
+module.exports = {
+    params: 'id',
+    pathPart: null, // routes to /users/:id rather than /users/:id/view
+    get: function (req, res, next) {
+        // code to print details of user
+    }
+};
+```
+
+#### controllers/users/edit.js
+
+```js
+// creates routing '/users/:id/edit'
+module.exports = {
+    params: 'id',
+    get: function (req, res, next) {
+        // code to print form for editing user
+    },
+    post: function (req, res, next) {
+        // code to process form submission
+    }
+};
+```
+
+#### controllers/users/delete.js
+
+```js
+// creates routing '/users/:id/delete'
+module.exports = {
+    params: 'id',
+    get: function (req, res, next) {
+        // code to print confirmation form for deleting user
+    },
+    post: function (req, res, next) {
+        // code to process form submission
+    }
+};
+```
+
+### Routes & actions
+
+Expressor has the concepts of "routes", "actions" and "methods".
+
+* A route is defined by a folder in the folder structure. e.g. `controllers/users/` folder is the `users` route
+* An action is the controller, defined by a file in the folder structure. e.g. `controllers/users/edit.js` is the `edit` action on the `users` route.
+* A method is defined by a key on the action object e.g. `get` or `post`
+
+### Route attributes
+
+In addition to defining actions in files, you can also define attributes of the route (i.e. a group of controllers) by placing a file `_index.js` in the route folder.
+
+```js
+// controllers/users/_index.js
+module.exports = {
+    path: '/accounts'
+};
+```
+
+### Routing paths
+
+By default routing paths are created as follows:
+
+* Take the path of the parent route's `index` action
+* Add the route name (e.g. `users`)
+* Add the action's params e.g. `params: 'id'` adds `:id` to the path
+* Add the action name (e.g. `edit`)
+
+#### Overriding/customizing the path
+
+The path can be customized in various ways.
+
+##### Define in route definition
+
+```js
+// controllers/users/_index.js
+module.exports = {
+    path: '/accounts'
+};
+```
+
+The route path is used as the base of the paths for all the route's actions. i.e. the `edit` action becomes routed as `/accounts/:id/edit`
+
+##### Define in action definition
+
+```js
+// controllers/users/index.js
+module.exports = {
+    path: '/accounts',
+    /* rest of action definition */
+};
+```
+
+##### Change `pathPart` in route definition
+
+`pathPath` by default inherit's the route's name (the folder name) and is used in constructing the path.
+
+```js
+// controllers/users/_index.js
+module.exports = {
+    pathPart: 'accounts'
+};
+```
+
+This achieves the same as the above examples.
+
+##### Change `pathPart` in action definition
+
+`pathPath` by default inherit's the action's name (the file name) and is used in constructing the path.
+
+```js
+// controllers/users/view.js
+module.exports = {
+    pathPart: null
+};
+```
+
+##### Params
+
+To create a route `/users/:userId/:profileId`:
+
+```js
+// controllers/users/view.js
+module.exports = {
+    params: ['userId', 'profileId']
+};
+```
+
+#### Path tricks
+
+To make github-style routes `/:organisation/:repo`:
+
+* Create a route folder `controllers/organisations`
+* Set `pathPart: null` in organisations route controller (`controllers/organisations/_index.js`)
+* Set `pathPath: null` in organisations view action (`controllers/organisations/view.js`)
+* Create a route folder `controllers/organisations/repos`
+* Set `pathPart: null` in repos route controller (`controllers/organisations/repos/_index.js`)
+* Set `pathPath: null` in repos view action (`controllers/organisations/repos/view.js`)
+* Set `parentAction: 'view'` in repos view action (`controllers/organisations/repos/view.js`)
+
+The file `controllers/organisations/repos/view.js` will then map to '/:organisation/:repo'.
+
+## Advanced usage
+
+### Options
+
+Options should be passed to `expressor(app, options)` or `expressor(app, path, options)`.
+
+#### methods
+
+Set what methods can be used on actions. Defaults to `['get', 'post']`.
+
+```js
+expressor(app, path, { methods: [ 'get', 'post', 'put', 'delete' ] });
+```
+
+#### endSlash
+
+Controls whether to add a trailing `/` on the end of routes with empty action `pathPart`. Defaults to `false`.
+
+Routings with `endSlash = false`:
+
+```
+/users
+/users/new
+/users/:id
+/users/:id/edit
+/users/:id/delete
+```
+
+With `endSlash = true`:
+
+```
+/users/
+/users/new
+/users/:id/
+/users/:id/edit
+/users/:id/delete
+```
+
+(NB only `/users/` and `/users/:id/` are affected)
+
+#### indexAction
+
+Set what action is the "index" action i.e. the default action of a route. Defaults to `'index'`.
+
+#### paramsAttribute
+
+Changes attribute of actions that contains params names. Defaults to `'params'`.
+
+#### logger
+
+If a function is provided as `options.logger`, it is called for each route which is attached to express with a message in format 'Attached route: <method> <path>'.
+
+```js
+expressor(app, path, {logger: console.log});
+```
 
 ## Tests
 
