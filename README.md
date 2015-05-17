@@ -182,7 +182,7 @@ Expressor has the concepts of "routes", "actions" and "methods".
 * An action is the controller, defined by a file in the folder structure. e.g. `controllers/users/edit.js` is the `edit` action on the `users` route.
 * A method is defined by a key on the action object e.g. `get` or `post`
 
-### Route attributes
+### Route definitions
 
 In addition to defining actions in files, you can also define attributes of the route (i.e. a group of controllers) by placing a file `_index.js` in the route folder.
 
@@ -191,6 +191,24 @@ In addition to defining actions in files, you can also define attributes of the 
 module.exports = {
     path: '/accounts'
 };
+```
+
+Actions can be defined in this file rather than one controller per file if preferred:
+
+```js
+// controllers/users/_index.js
+module.exports = {
+    actions: {
+        index: {
+            get: function (req, res, next) { /* ... */ }
+        },
+        new: { /* ... */ },
+        view: { /* ... */ },
+        edit: { /* ... */ },
+        delete: { /* ... */ }
+    }
+};
+
 ```
 
 ### Routing paths
