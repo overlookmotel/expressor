@@ -11,3 +11,7 @@
 ## 0.0.3
 
 * README for `parentAction`
+
+## Next
+
+* Clear require cache before each test

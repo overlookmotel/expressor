@@ -8,6 +8,7 @@ var chai = require('chai'),
 	expect = chai.expect,
 	pathModule = require('path'),
 	express = require('express'),
+	_ = require('lodash'),
 	expressor = require('../lib/');
 
 // init
@@ -22,6 +23,12 @@ var app,
 	loadPath = pathModule.join(__dirname, 'example');
 
 beforeEach(function() {
+	// clear require cache
+	_.forIn(require.cache, function(obj, key) { // jshint ignore:line
+		if (_.startsWith(key, loadPath)) delete require.cache[key];
+	});
+
+	// init express app
 	app = express();
 });
 
