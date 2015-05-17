@@ -12,7 +12,7 @@
 
 * README for `parentAction`
 
-## Next
+## 0.0.4
 
 * Support definition of actions in route definition
 * Clear require cache before each test
