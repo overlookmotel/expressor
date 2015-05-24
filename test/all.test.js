@@ -33,30 +33,34 @@ beforeEach(function() {
 });
 
 describe('Expressor can be called with', function() {
+	var thisLoadPath = pathModule.join(loadPath, 'root');
+
 	it.skip('(app)', function() {
 		// can't test this
 	});
 
 	it('(app, path)', function() {
-		expressor(app, loadPath);
-		expect(app.expressor.options.path).to.equal(loadPath);
+		expressor(app, thisLoadPath);
+		expect(app.expressor.options.path).to.equal(thisLoadPath);
 	});
 
 	it('(app, options)', function() {
-		expressor(app, {path: loadPath});
-		expect(app.expressor.options.path).to.equal(loadPath);
+		expressor(app, {path: thisLoadPath});
+		expect(app.expressor.options.path).to.equal(thisLoadPath);
 	});
 
 	it('(app, path, options)', function() {
-		expressor(app, loadPath, {foo: 'bar'});
-		expect(app.expressor.options.path).to.equal(loadPath);
+		expressor(app, thisLoadPath, {foo: 'bar'});
+		expect(app.expressor.options.path).to.equal(thisLoadPath);
 		expect(app.expressor.options.foo).to.equal('bar');
 	});
 });
 
 describe('Expressor stores', function() {
+	var thisLoadPath = pathModule.join(loadPath, 'root');
+
 	beforeEach(function() {
-		expressor(app, loadPath);
+		expressor(app, thisLoadPath);
 	});
 
 	it('routes in express app', function() {
@@ -68,97 +72,205 @@ describe('Expressor stores', function() {
 	});
 });
 
-describe('Path', function() {
-	var tree;
-	beforeEach(function() {
-		expressor(app, loadPath);
-		tree = app.expressor.routes;
+describe('Path correct for', function() {
+	describe('root route', function() {
+		var tree;
+		beforeEach(function() {
+			expressor(app, pathModule.join(loadPath, 'root'));
+			tree = app.expressor.routes;
+		});
+
+		it('index action', function() {
+			expect(tree.actions.index.path).to.equal('/');
+		});
+
+		it('other action', function() {
+			expect(tree.actions.view.path).to.equal('/view');
+		});
 	});
 
-	it('correct for root index action', function() {
-		expect(tree.actions.index.path).to.equal('/');
+	describe('nested routes', function() {
+		var tree;
+		beforeEach(function() {
+			expressor(app, pathModule.join(loadPath, 'nested'));
+			tree = app.expressor.routes;
+		});
+
+		describe('1st level', function() {
+			it('index action', function() {
+				expect(tree.routes.foo.actions.index.path).to.equal('/foo');
+			});
+
+			it('other action', function() {
+				expect(tree.routes.foo.actions.view.path).to.equal('/foo/view');
+			});
+		});
+
+		describe('2nd level', function() {
+			it('index action', function() {
+				expect(tree.routes.foo.routes.bar.actions.index.path).to.equal('/foo/bar');
+			});
+
+			it('other action', function() {
+				expect(tree.routes.foo.routes.bar.actions.view.path).to.equal('/foo/bar/view');
+			});
+		});
 	});
 
-	it('correct for root other action', function() {
-		expect(tree.actions.view.path).to.equal('/view');
+	describe('params', function() {
+		var tree;
+		beforeEach(function() {
+			expressor(app, pathModule.join(loadPath, 'params'));
+			tree = app.expressor.routes;
+		});
+
+		describe('root level', function() {
+			it('single param action', function() {
+				expect(tree.actions.view.path).to.equal('/:id/view');
+			});
+
+			it('multiple param action', function() {
+				expect(tree.actions.multiple.path).to.equal('/:id1/:id2/multiple');
+			});
+		});
+
+		describe('1st level', function() {
+			it('single param action', function() {
+				expect(tree.routes.foo.actions.view.path).to.equal('/foo/:id/view');
+			});
+
+			it('multiple param action', function() {
+				expect(tree.routes.foo.actions.multiple.path).to.equal('/foo/:id1/:id2/multiple');
+			});
+		});
 	});
 
-	it('correct for route index action', function() {
-		expect(tree.routes.users.actions.index.path).to.equal('/users');
+	describe('parentAction', function() {
+		var tree;
+		beforeEach(function() {
+			expressor(app, pathModule.join(loadPath, 'parentAction'));
+			tree = app.expressor.routes;
+		});
+
+		describe('1st level', function() {
+			it('index action', function() {
+				expect(tree.routes.foo.actions.index.path).to.equal('/:id/view/foo');
+			});
+
+			it('other action', function() {
+				expect(tree.routes.foo.actions.view.path).to.equal('/:id/view/foo/:fooId/view');
+			});
+		});
+
+		describe('2nd level', function() {
+			it('index action', function() {
+				expect(tree.routes.foo.routes.bar.actions.index.path).to.equal('/:id/view/foo/:fooId/view/bar');
+			});
+
+			it('other action', function() {
+				expect(tree.routes.foo.routes.bar.actions.view.path).to.equal('/:id/view/foo/:fooId/view/bar/:barId/view');
+			});
+		});
 	});
 
-	it('correct for route other action', function() {
-		expect(tree.routes.users.actions.new.path).to.equal('/users/new');
+	describe('pathPart', function() {
+		var tree;
+		beforeEach(function() {
+			expressor(app, pathModule.join(loadPath, 'pathPart'));
+			tree = app.expressor.routes;
+		});
+
+		describe('altered', function() {
+			describe('on action', function() {
+				it('root level', function() {
+					expect(tree.actions.edit.path).to.equal('/update');
+				});
+
+				it('1st level', function() {
+					expect(tree.routes.foo.actions.edit.path).to.equal('/foo/update');
+				});
+
+				it('1st level inherited using parentAction', function() {
+					expect(tree.routes.foo.actions.inherit.path).to.equal('/update/foo/inherit');
+				});
+			});
+
+			describe('on route', function() {
+				it('index action', function() {
+					expect(tree.routes.alter.actions.index.path).to.equal('/altered');
+				});
+
+				it('other action', function() {
+					expect(tree.routes.alter.actions.view.path).to.equal('/altered/view');
+				});
+			});
+		});
+
+		describe('removed', function() {
+			describe('on action', function() {
+				it('root level', function() {
+					expect(tree.actions.view.path).to.equal('/:id');
+				});
+
+				it('1st level', function() {
+					expect(tree.routes.foo.actions.view.path).to.equal('/foo/:id');
+				});
+			});
+
+			describe('on route', function() {
+				it('index action', function() {
+					expect(tree.routes.removed.actions.index.path).to.equal('/:id');
+				});
+
+				it('other action', function() {
+					expect(tree.routes.removed.actions.view.path).to.equal('/:id/view');
+				});
+			});
+		});
 	});
 
-	it('correct for route other action with params', function() {
-		expect(tree.routes.users.actions.edit.path).to.equal('/users/:id/edit');
-	});
+	describe('path', function() {
+		var tree;
+		beforeEach(function() {
+			expressor(app, pathModule.join(loadPath, 'path'));
+			tree = app.expressor.routes;
+		});
 
-	it('correct for nested route index action', function() {
-		expect(tree.routes.users.routes.permissions.actions.index.path).to.equal('/users/permissions');
-	});
+		describe('on action', function() {
+			it('root level', function() {
+				expect(tree.actions.edit.path).to.equal('/update');
+			});
 
-	it('correct for nested route index action', function() {
-		expect(tree.routes.users.routes.permissions.actions.index.path).to.equal('/users/permissions');
-	});
+			it('1st level', function() {
+				expect(tree.routes.foo.actions.edit.path).to.equal('/bar/update');
+			});
 
-	it('correct for nested route action with parentAction', function() {
-		expect(tree.routes.users.routes.permissions.actions.list.path).to.equal('/users/:id/permissions/list');
-	});
+			it('1st level inherited using parentAction', function() {
+				expect(tree.routes.foo.actions.inherit.path).to.equal('/update/foo/inherit');
+			});
+		});
 
-	it('correct for nested route action with parentAction and params', function() {
-		expect(tree.routes.users.routes.permissions.actions.edit.path).to.equal('/users/:id/permissions/:permissionId/edit');
-	});
+		describe('on route', function() {
+			it('index action', function() {
+				expect(tree.routes.alter.actions.index.path).to.equal('/altered');
+			});
 
-	it('uses route pathPart in index action', function() {
-		expect(tree.routes.foo.actions.index.path).to.equal('/bar');
-	});
-
-	it('uses route pathPart in other action', function() {
-		expect(tree.routes.foo.actions.boo.path).to.equal('/bar/boo');
-	});
-
-	it('uses action pathPart', function() {
-		expect(tree.actions.old.path).to.equal('/new');
-	});
-
-	it('uses action pathPart in child action', function() {
-		expect(tree.routes.foo.actions.bam.path).to.equal('/new/bar/bam');
-	});
-
-	it('uses empty route pathPart', function() {
-		expect(tree.routes.orgs.actions.view.path).to.equal('/:orgId');
-	});
-
-	it('uses empty route pathPart in child action', function() {
-		expect(tree.routes.orgs.routes.repos.actions.list.path).to.equal('/:orgId/list');
-	});
-
-	it('uses empty route pathPart x2 in child action', function() {
-		expect(tree.routes.orgs.routes.repos.actions.view.path).to.equal('/:orgId/:repoId');
-	});
-
-	it('uses multiple params', function() {
-		expect(tree.actions.params.path).to.equal('/:a/:b/params');
-	});
-
-	it('overriden by route path', function() {
-		expect(tree.routes.zoo.routes.creatures.actions.donkey.path).to.equal('/animals/donkey');
-	});
-
-	it('overriden by action path', function() {
-		expect(tree.routes.zoo.routes.creatures.actions.monkey.path).to.equal('/baboon');
+			it('other action', function() {
+				expect(tree.routes.alter.actions.view.path).to.equal('/altered/view');
+			});
+		});
 	});
 });
 
 describe('Option', function() {
 	describe('methods', function() {
+		var thisLoadPath = pathModule.join(loadPath, 'methods');
+
 		it('creates routes for included methods', function() {
 			var put = false;
-			expressor(app, loadPath, {methods: ['get', 'post', 'put'], logger: function(msg) {
+			expressor(app, thisLoadPath, {methods: ['get', 'post', 'put'], logger: function(msg) {
 				var parts = msg.split('\t');
-				if (parts[1] == 'put' && parts[2] == '/users') put = true;
+				if (parts[1] == 'put' && parts[2] == '/') put = true;
 			}});
 
 			expect(put).to.be.true;
@@ -166,9 +278,9 @@ describe('Option', function() {
 
 		it('does not create routes for non-included methods', function() {
 			var put = false;
-			expressor(app, loadPath, {logger: function(msg) {
+			expressor(app, thisLoadPath, {logger: function(msg) {
 				var parts = msg.split('\t');
-				if (parts[1] == 'put' && parts[2] == '/users') put = true;
+				if (parts[1] == 'put' && parts[2] == '/') put = true;
 			}});
 
 			expect(put).to.be.false;
@@ -176,8 +288,10 @@ describe('Option', function() {
 	});
 
 	it('endSlash', function() {
-		expressor(app, loadPath, {endSlash: true});
+		expressor(app, pathModule.join(loadPath, 'resource'), {endSlash: true});
 		var tree = app.expressor.routes;
+		expect(tree.actions.index.path).to.equal('/');
+		expect(tree.actions.foo.path).to.equal('/foo');
 		expect(tree.routes.users.actions.index.path).to.equal('/users/');
 		expect(tree.routes.users.actions.new.path).to.equal('/users/new');
 		expect(tree.routes.users.actions.view.path).to.equal('/users/:id/');
@@ -185,20 +299,22 @@ describe('Option', function() {
 	});
 
 	it('indexAction', function() {
-		expressor(app, loadPath, {indexAction: 'view'});
+		expressor(app, pathModule.join(loadPath, 'indexAction'), {indexAction: 'ind'});
 		var tree = app.expressor.routes;
-		expect(tree.actions.view.path).to.equal('/');
+		expect(tree.actions.ind.path).to.equal('/');
+		expect(tree.routes.foo.actions.ind.path).to.equal('/foo');
+		expect(tree.routes.foo.actions.new.path).to.equal('/foo/new');
 	});
 
 	it('paramsAttribute', function() {
-		expressor(app, loadPath, {paramsAttribute: 'paramsAlt'});
+		expressor(app, pathModule.join(loadPath, 'paramsAttribute'), {paramsAttribute: 'paramsAlt'});
 		var tree = app.expressor.routes;
-		expect(tree.actions.params.path).to.equal('/:x/params');
+		expect(tree.actions.index.path).to.equal('/:id');
 	});
 
 	it('logger', function() {
 		var msgs = [];
-		expressor(app, loadPath, {logger: function(msg) {msgs.push(msg);}});
+		expressor(app, pathModule.join(loadPath, 'root'), {logger: function(msg) {msgs.push(msg);}});
 
 		expect(msgs.length).to.be.ok;
 		msgs.forEach(function(msg) {

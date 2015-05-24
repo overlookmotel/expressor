@@ -16,3 +16,7 @@
 
 * Support definition of actions in route definition
 * Clear require cache before each test
+
+## Next
+
+* Refactor tests
