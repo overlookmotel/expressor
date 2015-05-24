@@ -21,7 +21,8 @@
     "express": "^4.12.3",
     "mocha": "^2.2.4",
     "chai": "^2.3.0",
-    "jshint": "^2.7.0"
+    "jshint": "^2.7.0",
+    "supertest": "^1.0.1"
   },
   "keywords": [
     "express",

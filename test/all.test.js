@@ -8,6 +8,7 @@ var chai = require('chai'),
 	expect = chai.expect,
 	pathModule = require('path'),
 	express = require('express'),
+	request = require('supertest'),
 	_ = require('lodash'),
 	expressor = require('../lib/');
 
@@ -69,6 +70,22 @@ describe('Expressor stores', function() {
 
 	it('options in express app', function() {
 		expect(app.expressor.options).to.be.ok;
+	});
+});
+
+describe('Expressor creates express routes for', function() {
+	var thisLoadPath = pathModule.join(loadPath, 'express');
+
+	beforeEach(function() {
+		expressor(app, thisLoadPath);
+	});
+
+	it('GET method', function(cb) {
+		request(app).get('/').expect('GET index', cb);
+	});
+
+	it('POST method', function(cb) {
+		request(app).post('/').expect('POST index', cb);
 	});
 });
 
