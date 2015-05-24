@@ -9,11 +9,14 @@ var chai = require('chai'),
 	pathModule = require('path'),
 	express = require('express'),
 	request = require('supertest'),
+	sinon = require('sinon'),
+	sinonChai = require('sinon-chai'),
 	_ = require('lodash'),
 	expressor = require('../lib/');
 
 // init
 chai.config.includeStack = true;
+chai.use(sinonChai);
 
 // tests
 
@@ -336,6 +339,34 @@ describe('Option', function() {
 		expect(msgs.length).to.be.ok;
 		msgs.forEach(function(msg) {
 			expect(msg).to.match(/^Attached route:\t(get|post)\t\/[^\t]*/);
+		});
+	});
+
+	describe('wrapper', function() {
+		var thisLoadPath = pathModule.join(loadPath, 'wrapper');
+
+		it('is called with (fn, method, action, app)', function() {
+			var spy = sinon.spy(function(fn) {return fn;});
+			expressor(app, thisLoadPath, {wrapper: spy});
+
+			expect(spy).has.been.calledOnce;
+			expect(spy.firstCall).calledWithExactly(
+				sinon.match.func,
+				'get',
+				app.expressor.routes.actions.index,
+				app
+			);
+		});
+
+		it('wraps route method function', function(cb) {
+			expressor(app, thisLoadPath, {wrapper: function(fn, method, action, app) { // jshint ignore:line
+				return function(req, res, next) {
+					req.foo = 'bar';
+					return fn(req, res, next);
+				};
+			}});
+
+			request(app).get('/').expect('GET index bar', cb);
 		});
 	});
 });

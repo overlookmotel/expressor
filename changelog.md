@@ -19,5 +19,6 @@
 
 ## Next
 
+* `wrapper` option
 * Tests for creation of express routes
 * Refactor tests

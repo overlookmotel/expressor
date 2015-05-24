@@ -368,6 +368,39 @@ If a function is provided as `options.logger`, it is called for each route which
 expressor(app, path, {logger: console.log});
 ```
 
+#### wrapper
+
+A function that wraps all controller method functions. Wrapper is called with `(fn, method, action, app)` and should return a function which will be set as the controller method function in place of the original.
+
+e.g. If you want to write your controller functions to return promises rather than use callbacks:
+
+```js
+expressor(app, path, {
+    wrapper: function(fn, method, action, app) {
+        return function(req, res, next) {
+            fn(req, res).then(function() {
+                console.log('Request handled: ' + req.url);
+            }).catch(function(err) {
+                next(err);
+            });
+        };
+    }
+});
+```
+
+Then an action might be as defined as follows:
+
+```js
+// controllers/users/index.js
+module.exports = {
+    get: function(req, res) {
+        return User.findAll().then(function(users) {
+            res.json(users);
+        });
+    }
+};
+```
+
 ## Tests
 
 Use `npm test` to run the tests.
