@@ -9,7 +9,7 @@
 [![Dependency Status](https://img.shields.io/david/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
 [![Dev dependency Status](https://img.shields.io/david/dev/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
 
-API is not yet stable and breaking changes are possible in v0.1.0. There are tests covering all options.
+API is stable. There are tests covering all features and options.
 
 ## What is it for?
 
