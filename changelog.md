@@ -32,3 +32,7 @@
 
 * Test code coverage & Travis sends to coveralls
 * Test for bad `parentAction`
+
+## Next
+
+* `npm run cover` runs coverage tests

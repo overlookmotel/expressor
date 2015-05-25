@@ -460,7 +460,7 @@ NB [inflection](https://www.npmjs.com/package/inflection) is a package for conve
 
 ## Tests
 
-Use `npm test` to run the tests.
+Use `npm test` to run the tests. Use `npm run cover` to check coverage.
 
 ## Changelog
 
