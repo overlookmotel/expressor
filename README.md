@@ -248,7 +248,7 @@ module.exports = {
 
 ##### Change `pathPart` in route definition
 
-`pathPath` by default inherit's the route's name (the folder name) and is used in constructing the path.
+`pathPath` by default inherits the route's name (the folder name) and is used in constructing the path.
 
 ```js
 // controllers/users/_index.js
@@ -261,7 +261,7 @@ This achieves the same as the above examples.
 
 ##### Change `pathPart` in action definition
 
-`pathPath` by default inherit's the action's name (the file name) and is used in constructing the path.
+`pathPath` by default inherits the action's name (the file name) and is used in constructing the path.
 
 ```js
 // controllers/users/view.js
@@ -306,9 +306,11 @@ To make github-style routes `/:organisation/:repo`:
 * Create a route folder `controllers/organisations`
 * Set `pathPart: null` in organisations route controller (`controllers/organisations/_index.js`)
 * Set `pathPath: null` in organisations view action (`controllers/organisations/view.js`)
+* Set `params: 'organisation'` in organisations view action (`controllers/organisations/view.js`)
 * Create a route folder `controllers/organisations/repos`
 * Set `pathPart: null` in repos route controller (`controllers/organisations/repos/_index.js`)
 * Set `pathPath: null` in repos view action (`controllers/organisations/repos/view.js`)
+* Set `params: 'repo'` in repos view action (`controllers/organisations/repos/view.js`)
 * Set `parentAction: 'view'` in repos view action (`controllers/organisations/repos/view.js`)
 
 The file `controllers/organisations/repos/view.js` will then map to '/:organisation/:repo'.
@@ -363,7 +365,7 @@ Changes attribute of actions that contains params names. Defaults to `'params'`.
 
 #### logger
 
-If a function is provided as `options.logger`, it is called for each route which is attached to express with a message in format 'Attached route: <method> <path>'.
+If a function is provided as `options.logger`, it is called for each route which is attached to express with a message in format 'Attached route: [method] [path]'.
 
 ```js
 expressor(app, path, {logger: console.log});
@@ -416,7 +418,7 @@ Defaults to the following options:
 }
 ```
 
-i.e. ignores files and folders with file names starting with `'.'` or `'_'` and route definitions found in files named `_index.js`.
+i.e. ignores files and folders with file names starting with `'.'` or `'_'` and route definitions are found in files named `_index.js`.
 
 You could, for example, change these options to write routing files in coffeescript.
 
@@ -424,9 +426,7 @@ You could, for example, change these options to write routing files in coffeescr
 
 To allow customization, hooks can be set to run on the tree of routes, either before paths of each action are defined or after.
 
-Hooks are defined in `options.hooks`.
-
-Hook functions are:
+Hooks are defined in `options.hooks`. Hook functions are:
 
 ##### treeBeforePath / treeAfterPath
 

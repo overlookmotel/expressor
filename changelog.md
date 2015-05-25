@@ -36,3 +36,4 @@
 ## Next
 
 * `npm run cover` runs coverage tests
+* README update
