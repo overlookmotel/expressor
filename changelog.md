@@ -30,4 +30,5 @@
 
 ## Next
 
+* Test code coverage & Travis sends to coveralls
 * Test for bad `parentAction`

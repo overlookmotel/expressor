@@ -8,6 +8,7 @@
 [![Build Status](https://img.shields.io/travis/overlookmotel/expressor/master.svg)](http://travis-ci.org/overlookmotel/expressor)
 [![Dependency Status](https://img.shields.io/david/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
 [![Dev dependency Status](https://img.shields.io/david/dev/overlookmotel/expressor.svg)](https://david-dm.org/overlookmotel/expressor)
+[![Coverage Status](https://img.shields.io/coveralls/overlookmotel/expressor/master.svg)](https://coveralls.io/r/overlookmotel/expressor)
 
 API is stable. There are tests covering all features and options.
 
