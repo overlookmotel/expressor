@@ -370,3 +370,127 @@ describe('Option', function() {
 		});
 	});
 });
+
+describe('Hooks', function() {
+	var thisLoadPath = pathModule.join(loadPath, 'hooks');
+
+	describe('before', function() {
+		describe('tree', function() {
+			it('is called with (tree, app)', function() {
+				var spy = sinon.spy();
+				expressor(app, thisLoadPath, {hooks: {treeBeforePath: spy}});
+
+				expect(spy).has.been.calledOnce;
+				expect(spy).has.been.calledWithExactly(app.expressor.routes, app);
+			});
+
+			it('acts on tree', function() {
+				expressor(app, thisLoadPath, {hooks: {treeBeforePath: function(tree, app) { // jshint ignore:line
+					tree.actions.index.pathPart = 'foo';
+				}}});
+
+				expect(app.expressor.routes.actions.index.path).to.equal('/foo');
+			});
+		});
+
+		describe('route', function() {
+			it('is called on every route with (route, app)', function() {
+				var spy = sinon.spy();
+				expressor(app, thisLoadPath, {hooks: {routeBeforePath: spy}});
+
+				expect(spy).has.been.calledTwice;
+				expect(spy.firstCall).calledWithExactly(app.expressor.routes, app);
+				expect(spy.secondCall).calledWithExactly(app.expressor.routes.routes.foo, app);
+			});
+
+			it('acts on every route', function() {
+				expressor(app, thisLoadPath, {hooks: {routeBeforePath: function(route, app) { // jshint ignore:line
+					route.actions.index.pathPart = 'bar';
+				}}});
+
+				expect(app.expressor.routes.actions.index.path).to.equal('/bar');
+				expect(app.expressor.routes.routes.foo.actions.index.path).to.equal('/bar/foo/bar');
+			});
+		});
+
+		describe('action', function() {
+			it('is called on every action with (action, app)', function() {
+				var spy = sinon.spy();
+				expressor(app, thisLoadPath, {hooks: {actionBeforePath: spy}});
+
+				expect(spy).has.been.calledTwice;
+				expect(spy.firstCall).calledWithExactly(app.expressor.routes.actions.index, app);
+				expect(spy.secondCall).calledWithExactly(app.expressor.routes.routes.foo.actions.index, app);
+			});
+
+			it('acts on every action', function() {
+				expressor(app, thisLoadPath, {hooks: {actionBeforePath: function(action, app) { // jshint ignore:line
+					action.pathPart = 'bar';
+				}}});
+
+				expect(app.expressor.routes.actions.index.path).to.equal('/bar');
+				expect(app.expressor.routes.routes.foo.actions.index.path).to.equal('/bar/foo/bar');
+			});
+		});
+	});
+
+	describe('after', function() {
+		describe('tree', function() {
+			it('is called with (tree, app)', function() {
+				var spy = sinon.spy();
+				expressor(app, thisLoadPath, {hooks: {treeAfterPath: spy}});
+
+				expect(spy).has.been.calledOnce;
+				expect(spy).has.been.calledWithExactly(app.expressor.routes, app);
+			});
+
+			it('acts on tree', function() {
+				expressor(app, thisLoadPath, {hooks: {treeAfterPath: function(tree, app) { // jshint ignore:line
+					tree.actions.index.path = '/foo';
+				}}});
+
+				expect(app.expressor.routes.actions.index.path).to.equal('/foo');
+			});
+		});
+
+		describe('route', function() {
+			it('is called on every route with (route, app)', function() {
+				var spy = sinon.spy();
+				expressor(app, thisLoadPath, {hooks: {routeAfterPath: spy}});
+
+				expect(spy).has.been.calledTwice;
+				expect(spy.firstCall).calledWithExactly(app.expressor.routes, app);
+				expect(spy.secondCall).calledWithExactly(app.expressor.routes.routes.foo, app);
+			});
+
+			it('acts on every route', function() {
+				expressor(app, thisLoadPath, {hooks: {routeAfterPath: function(route, app) { // jshint ignore:line
+					route.actions.index.path = '/prefix' + route.actions.index.path;
+				}}});
+
+				expect(app.expressor.routes.actions.index.path).to.equal('/prefix/');
+				expect(app.expressor.routes.routes.foo.actions.index.path).to.equal('/prefix/foo');
+			});
+		});
+
+		describe('action', function() {
+			it('is called on every action with (action, app)', function() {
+				var spy = sinon.spy();
+				expressor(app, thisLoadPath, {hooks: {actionAfterPath: spy}});
+
+				expect(spy).has.been.calledTwice;
+				expect(spy.firstCall).calledWithExactly(app.expressor.routes.actions.index, app);
+				expect(spy.secondCall).calledWithExactly(app.expressor.routes.routes.foo.actions.index, app);
+			});
+
+			it('acts on every action', function() {
+				expressor(app, thisLoadPath, {hooks: {actionAfterPath: function(action, app) { // jshint ignore:line
+					action.path = '/prefix' + action.path;
+				}}});
+
+				expect(app.expressor.routes.actions.index.path).to.equal('/prefix/');
+				expect(app.expressor.routes.routes.foo.actions.index.path).to.equal('/prefix/foo');
+			});
+		});
+	});
+});

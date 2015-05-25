@@ -401,6 +401,44 @@ module.exports = {
 };
 ```
 
+### Hooks
+
+To allow customization, hooks can be set to run on the tree of routes, either before paths of each action are defined or after.
+
+Hooks are defined in `options.hooks`.
+
+Hook functions are:
+
+##### treeBeforePath / treeAfterPath
+
+Called with params `(tree, app)` where `tree` is the complete tree of routes. `app` is the express app.
+
+##### routeBeforePath / routeAfterPath
+
+Called on each route in the entire routing tree, with params `(route, app)`.
+
+##### actionBeforePath / actionAfterPath
+
+Called on each action in the entire routing tree, with params `(action, app)`.
+
+#### Example
+
+This example sets the `params` field of each action where params is defined as `true` to '[route name]Id', so that routings are defined like `/users/:userId/permissions/:permissionId`
+
+```js
+expressor(app, path, {
+    hooks: {
+        actionBeforePath: function(action, app) {
+            if (action.params === true) {
+                action.params = inflection.singularize(action.route.name) + 'Id';
+            }
+        }
+    }
+});
+```
+
+NB [inflection](https://www.npmjs.com/package/inflection) is a package for converting words between singular and plural.
+
 ## Tests
 
 Use `npm test` to run the tests.

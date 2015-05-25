@@ -19,6 +19,7 @@
 
 ## Next
 
+* Hooks
 * `wrapper` option
 * Action's `pathPart` set to null for index action
 * `treePath` set for all actions
