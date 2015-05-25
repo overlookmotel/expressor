@@ -28,7 +28,7 @@
 * README `load` options
 * README update
 
-## Next
+## 1.0.1
 
 * Test code coverage & Travis sends to coveralls
 * Test for bad `parentAction`
