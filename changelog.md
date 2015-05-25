@@ -21,5 +21,6 @@
 
 * `wrapper` option
 * Action's `pathPart` set to null for index action
+* `treePath` set for all actions
 * Tests for creation of express routes
 * Refactor tests
