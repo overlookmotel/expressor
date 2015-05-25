@@ -401,6 +401,24 @@ module.exports = {
 };
 ```
 
+#### load
+
+A set of options passed to [require-folder-tree](https://www.npmjs.com/package/require-folder-tree) which loads the routing files.
+
+Defaults to the following options:
+
+```js
+{
+    filterFiles: /^([^\._].*)\.js$/,
+    filterFolders: /^([^\._].*)$/,
+    indexFile: '_index.js'
+}
+```
+
+i.e. ignores files and folders with file names starting with `'.'` or `'_'` and route definitions found in files named `_index.js`.
+
+You could, for example, change these options to write routing files in coffeescript.
+
 ### Hooks
 
 To allow customization, hooks can be set to run on the tree of routes, either before paths of each action are defined or after.

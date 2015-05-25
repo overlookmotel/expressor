@@ -25,3 +25,4 @@
 * `treePath` set for all actions
 * Tests for creation of express routes
 * Refactor tests
+* README `load` options
