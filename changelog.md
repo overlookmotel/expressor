@@ -33,7 +33,7 @@
 * Test code coverage & Travis sends to coveralls
 * Test for bad `parentAction`
 
-## Next
+## 1.0.2
 
 * `npm run cover` runs coverage tests
 * README update
