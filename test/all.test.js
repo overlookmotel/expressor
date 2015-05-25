@@ -191,6 +191,17 @@ describe('Path correct for', function() {
 				expect(tree.routes.foo.routes.bar.actions.view.path).to.equal('/:id/view/foo/:fooId/view/bar/:barId/view');
 			});
 		});
+
+		it('throws error if non-existent parent', function() {
+			try {
+				expressor(app, pathModule.join(loadPath, 'parentActionError'));
+				expect(false).to.be.true;
+			} catch (err) {
+				expect(err).to.be.instanceof(expressor.Error);
+				expect(err.name).to.equal('ExpressorError');
+				expect(err.message).to.equal("Cannot find parent action 'index' for action /foo/index");
+			}
+		});
 	});
 
 	describe('pathPart', function() {

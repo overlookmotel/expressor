@@ -27,3 +27,7 @@
 * Refactor tests
 * README `load` options
 * README update
+
+## Next
+
+* Test for bad `parentAction`
