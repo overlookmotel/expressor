@@ -37,3 +37,7 @@
 
 * `npm run cover` runs coverage tests
 * README update
+
+## Next
+
+* Disable Travis dependency cache
