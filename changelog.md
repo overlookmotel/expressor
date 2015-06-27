@@ -41,3 +41,7 @@
 ## 1.0.3
 
 * Disable Travis dependency cache
+
+## Next
+
+* Define actions' `pathPart` before beforePath hooks
