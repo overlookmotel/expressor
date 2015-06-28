@@ -199,7 +199,7 @@ describe('Path correct for', function() {
 			} catch (err) {
 				expect(err).to.be.instanceof(expressor.Error);
 				expect(err.name).to.equal('ExpressorError');
-				expect(err.message).to.equal("Cannot find parent action 'index' for action /foo/index");
+				expect(err.message).to.equal("Cannot find parent action '../index' for action /foo/index");
 			}
 		});
 	});
@@ -278,16 +278,6 @@ describe('Path correct for', function() {
 
 			it('1st level inherited using parentAction', function() {
 				expect(tree.routes.foo.actions.inherit.path).to.equal('/update/foo/inherit');
-			});
-		});
-
-		describe('on route', function() {
-			it('index action', function() {
-				expect(tree.routes.alter.actions.index.path).to.equal('/altered');
-			});
-
-			it('other action', function() {
-				expect(tree.routes.alter.actions.view.path).to.equal('/altered/view');
 			});
 		});
 	});

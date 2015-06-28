@@ -150,7 +150,7 @@ module.exports = {
 ```js
 // creates routing '/users/:id/edit'
 module.exports = {
-    params: 'id',
+    parentAction: 'view',
     get: function (req, res, next) {
         // code to print form for editing user
     },
@@ -165,7 +165,7 @@ module.exports = {
 ```js
 // creates routing '/users/:id/delete'
 module.exports = {
-    params: 'id',
+    parentAction: 'view',
     get: function (req, res, next) {
         // code to print confirmation form for deleting user
     },
@@ -190,7 +190,7 @@ In addition to defining actions in files, you can also define attributes of the 
 ```js
 // controllers/users/_index.js
 module.exports = {
-    path: '/accounts'
+    pathPart: 'accounts'
 };
 ```
 
@@ -216,7 +216,7 @@ module.exports = {
 
 By default routing paths are created as follows:
 
-* Take the path of the parent route's `index` action
+* Take the path of the parent action (or parent route's index action for indexes)
 * Add the route name (e.g. `users`)
 * Add the action's params e.g. `params: 'id'` adds `:id` to the path
 * Add the action name (e.g. `edit`)
@@ -224,17 +224,6 @@ By default routing paths are created as follows:
 #### Overriding/customizing the path
 
 The path can be customized in various ways.
-
-##### Define in route definition
-
-```js
-// controllers/users/_index.js
-module.exports = {
-    path: '/accounts'
-};
-```
-
-The route path is used as the base of the paths for all the route's actions. i.e. the `edit` action becomes routed as `/accounts/:id/edit`
 
 ##### Define in action definition
 
@@ -283,16 +272,16 @@ module.exports = {
 
 ##### parentAction
 
-Sit this action on top of another action in the parent route.
+Sit this action on top of another action.
 
-e.g. for /users/:userId/permissions/:permissionId
+If `parentAction` begins with `'../'`, it sits on top of the named action in the parent route.
+
+e.g. for /users/:userId/permissions
 
 ```js
-// controllers/users/permissions/view.js
+// controllers/users/permissions/index.js
 module.exports = {
-    parentAction: 'view',
-    pathPart: null,
-    params: 'permissionId',
+    parentAction: '../view',
     get: function(req, res) { /* etc etc */ }
 };
 ```
@@ -309,9 +298,9 @@ To make github-style routes `/:organisation/:repo`:
 * Set `params: 'organisation'` in organisations view action (`controllers/organisations/view.js`)
 * Create a route folder `controllers/organisations/repos`
 * Set `pathPart: null` in repos route controller (`controllers/organisations/repos/_index.js`)
+* Set `parentAction: '../view'` in repos index action (`controllers/organisations/repos/index.js`)
 * Set `pathPath: null` in repos view action (`controllers/organisations/repos/view.js`)
 * Set `params: 'repo'` in repos view action (`controllers/organisations/repos/view.js`)
-* Set `parentAction: 'view'` in repos view action (`controllers/organisations/repos/view.js`)
 
 The file `controllers/organisations/repos/view.js` will then map to '/:organisation/:repo'.
 
@@ -442,7 +431,7 @@ Called on each action in the entire routing tree, with params `(action, app)`.
 
 #### Example
 
-This example sets the `params` field of each action where params is defined as `true` to '[route name]Id', so that routings are defined like `/users/:userId/permissions/:permissionId`
+This example sets the `params` field of each action where `params` is defined as `true` to '[route name]Id', so that routings are defined like `/users/:userId/permissions/:permissionId`
 
 ```js
 expressor(app, path, {

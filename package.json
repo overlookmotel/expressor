@@ -14,8 +14,9 @@
     "url": "https://github.com/overlookmotel/expressor/issues"
   },
   "dependencies": {
+    "lodash": "3.8.0",
     "require-folder-tree": "^1.4.0",
-    "lodash": "3.8.0"
+    "toposort": "^0.2.10"
   },
   "devDependencies": {
     "express": "^4.12.3",

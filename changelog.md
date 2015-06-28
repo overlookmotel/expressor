@@ -44,4 +44,11 @@
 
 ## Next
 
+* `parentAction` refers to action in same route
+* Remove support for defining `path` in route
 * Define actions' `pathPart` before beforePath hooks
+
+Breaking changes:
+
+* `parentAction` refers to action in same route (rather than parent route in v1.x.x)
+* Remove support for defining `path` in route
