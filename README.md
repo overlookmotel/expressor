@@ -12,6 +12,8 @@
 
 API is stable. There are tests covering all features and options.
 
+v2.0.0 contains breaking changes. Please see [changelog](https://github.com/overlookmotel/expressor/blob/master/changelog.md)
+
 ## What is it for?
 
 [Express](https://www.npmjs.com/package/express) is a brilliant and simple web framework for node. But most of the time having to define controllers and then manually link them to routes is unnecessary work.
@@ -453,7 +455,7 @@ Use `npm test` to run the tests. Use `npm run cover` to check coverage.
 
 ## Changelog
 
-See changelog.md
+See [changelog.md](https://github.com/overlookmotel/expressor/blob/master/changelog.md)
 
 ## Issues
 
