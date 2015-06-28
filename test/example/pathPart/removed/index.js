@@ -1,4 +1,4 @@
 module.exports = {
-    params: 'id',
+    param: 'id',
     get: function(req, res, next) {} // jshint ignore:line
 };

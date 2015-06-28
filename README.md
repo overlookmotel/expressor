@@ -137,7 +137,7 @@ module.exports = {
 ```js
 // creates routing '/users/:id'
 module.exports = {
-    params: 'id',
+    param: 'id',
     pathPart: null, // routes to /users/:id rather than /users/:id/view
     get: function (req, res, next) {
         // code to print details of user
@@ -218,7 +218,7 @@ By default routing paths are created as follows:
 
 * Take the path of the parent action (or parent route's index action for indexes)
 * Add the route name (e.g. `users`)
-* Add the action's params e.g. `params: 'id'` adds `:id` to the path
+* Add the action's params e.g. `param: 'id'` adds `:id` to the path
 * Add the action name (e.g. `edit`)
 
 #### Overriding/customizing the path
@@ -266,7 +266,7 @@ To create a route `/users/:userId/:profileId`:
 ```js
 // controllers/users/view.js
 module.exports = {
-    params: ['userId', 'profileId']
+    param: ['userId', 'profileId']
 };
 ```
 
@@ -295,12 +295,12 @@ To make github-style routes `/:organisation/:repo`:
 * Create a route folder `controllers/organisations`
 * Set `pathPart: null` in organisations route controller (`controllers/organisations/_index.js`)
 * Set `pathPath: null` in organisations view action (`controllers/organisations/view.js`)
-* Set `params: 'organisation'` in organisations view action (`controllers/organisations/view.js`)
+* Set `param: 'organisation'` in organisations view action (`controllers/organisations/view.js`)
 * Create a route folder `controllers/organisations/repos`
 * Set `pathPart: null` in repos route controller (`controllers/organisations/repos/_index.js`)
 * Set `parentAction: '../view'` in repos index action (`controllers/organisations/repos/index.js`)
 * Set `pathPath: null` in repos view action (`controllers/organisations/repos/view.js`)
-* Set `params: 'repo'` in repos view action (`controllers/organisations/repos/view.js`)
+* Set `param: 'repo'` in repos view action (`controllers/organisations/repos/view.js`)
 
 The file `controllers/organisations/repos/view.js` will then map to '/:organisation/:repo'.
 
@@ -348,9 +348,9 @@ With `endSlash = true`:
 
 Set what action is the "index" action i.e. the default action of a route. Defaults to `'index'`.
 
-#### paramsAttribute
+#### paramAttribute
 
-Changes attribute of actions that contains params names. Defaults to `'params'`.
+Changes attribute of actions that contains param names. Defaults to `'param'`.
 
 #### logger
 
@@ -431,14 +431,14 @@ Called on each action in the entire routing tree, with params `(action, app)`.
 
 #### Example
 
-This example sets the `params` field of each action where `params` is defined as `true` to '[route name]Id', so that routings are defined like `/users/:userId/permissions/:permissionId`
+This example sets the `param` field of each action where `param` is defined as `true` to '[route name]Id', so that routings are defined like `/users/:userId/permissions/:permissionId`
 
 ```js
 expressor(app, path, {
     hooks: {
         actionBeforePath: function(action, app) {
-            if (action.params === true) {
-                action.params = inflection.singularize(action.route.name) + 'Id';
+            if (action.param === true) {
+                action.param = inflection.singularize(action.route.name) + 'Id';
             }
         }
     }

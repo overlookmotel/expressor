@@ -327,8 +327,8 @@ describe('Option', function() {
 		expect(tree.routes.foo.actions.new.path).to.equal('/foo/new');
 	});
 
-	it('paramsAttribute', function() {
-		expressor(app, pathModule.join(loadPath, 'paramsAttribute'), {paramsAttribute: 'paramsAlt'});
+	it('paramAttribute', function() {
+		expressor(app, pathModule.join(loadPath, 'paramAttribute'), {paramAttribute: 'paramAlt'});
 		var tree = app.expressor.routes;
 		expect(tree.actions.index.path).to.equal('/:id');
 	});

@@ -46,6 +46,8 @@
 
 * `parentAction` refers to action in same route
 * Remove support for defining `path` in route
+* Rename `action.params` attribute to `param`
+* Rename `options.paramsAttribute` to `paramAttribute`
 * Define actions' `pathPart` before beforePath hooks
 
 Breaking changes:
