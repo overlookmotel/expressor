@@ -57,6 +57,6 @@ Breaking changes:
 * Rename `action.params` attribute to `param`
 * Rename `options.paramsAttribute` to `paramAttribute`
 
-## Next
+## 2.0.1
 
 * Changelog update

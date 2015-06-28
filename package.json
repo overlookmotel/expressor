@@ -1,6 +1,6 @@
 {
   "name": "expressor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Easy definition of express routes from a folder structure",
   "main": "./lib/",
   "author": {
