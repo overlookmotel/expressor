@@ -54,3 +54,9 @@ Breaking changes:
 
 * `parentAction` refers to action in same route (rather than parent route in v1.x.x)
 * Remove support for defining `path` in route
+* Rename `action.params` attribute to `param`
+* Rename `options.paramsAttribute` to `paramAttribute`
+
+## Next
+
+* Changelog update
