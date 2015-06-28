@@ -42,7 +42,7 @@
 
 * Disable Travis dependency cache
 
-## Next
+## 2.0.0
 
 * `parentAction` refers to action in same route
 * Remove support for defining `path` in route
