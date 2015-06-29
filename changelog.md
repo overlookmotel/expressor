@@ -61,6 +61,6 @@ Breaking changes:
 
 * Changelog update
 
-## Next
+## 2.0.2
 
 * Errors include stack trace
