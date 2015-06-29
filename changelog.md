@@ -60,3 +60,7 @@ Breaking changes:
 ## 2.0.1
 
 * Changelog update
+
+## Next
+
+* Errors include stack trace
