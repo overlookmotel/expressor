@@ -68,3 +68,7 @@ Breaking changes:
 ## 2.1.0
 
 * Added `routeFile` option
+
+## Next
+
+* Don't save `options.routeFile` to `options.load.indexFile`
