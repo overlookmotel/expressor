@@ -327,6 +327,12 @@ describe('Option', function() {
 		expect(tree.routes.foo.actions.new.path).to.equal('/foo/new');
 	});
 
+	it('routeFile', function() {
+		expressor(app, pathModule.join(loadPath, 'routeFile'), {routeFile: '_ind.js'});
+		var tree = app.expressor.routes;
+		expect(tree.routes.foo.actions.index.path).to.equal('/bar');
+	});
+
 	it('paramAttribute', function() {
 		expressor(app, pathModule.join(loadPath, 'paramAttribute'), {paramAttribute: 'paramAlt'});
 		var tree = app.expressor.routes;

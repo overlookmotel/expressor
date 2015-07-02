@@ -64,3 +64,7 @@ Breaking changes:
 ## 2.0.2
 
 * Errors include stack trace
+
+## Next
+
+* Added `routeFile` option

@@ -350,6 +350,10 @@ With `endSlash = true`:
 
 Set what action is the "index" action i.e. the default action of a route. Defaults to `'index'`.
 
+#### routeFile
+
+Set name of files containing route definitions. Defaults to `'_index.js'`.
+
 #### paramAttribute
 
 Changes attribute of actions that contains param names. Defaults to `'param'`.
@@ -404,12 +408,11 @@ Defaults to the following options:
 ```js
 {
     filterFiles: /^([^\._].*)\.js$/,
-    filterFolders: /^([^\._].*)$/,
-    indexFile: '_index.js'
+    filterFolders: /^([^\._].*)$/
 }
 ```
 
-i.e. ignores files and folders with file names starting with `'.'` or `'_'` and route definitions are found in files named `_index.js`.
+i.e. ignores files and folders with file names starting with `'.'` or `'_'`.
 
 You could, for example, change these options to write routing files in coffeescript.
 
