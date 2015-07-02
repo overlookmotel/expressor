@@ -69,6 +69,6 @@ Breaking changes:
 
 * Added `routeFile` option
 
-## Next
+## 2.1.1
 
 * Don't save `options.routeFile` to `options.load.indexFile`
