@@ -1,5 +1,7 @@
 # expressor.js
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/overlookmotel/expressor.svg)](https://greenkeeper.io/)
+
 # Easy definition of express routes from a folder structure
 
 ## Current status
